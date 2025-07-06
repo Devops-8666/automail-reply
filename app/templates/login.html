@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mail Login</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container py-5">
+  <h2 class="mb-4">Login with App Password</h2>
+  <form method="POST">
+    <div class="mb-3">
+      <label>Email Address</label>
+      <input name="email" type="email" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label>IMAP Server</label>
+      <input name="imap_host" class="form-control" placeholder="imap.gmail.com" required>
+    </div>
+    <div class="mb-3">
+      <label>App Password</label>
+      <input name="password" type="password" class="form-control" required>
+    </div>
+    <button class="btn btn-primary">Login to Inbox</button>
+  </form>
+</body>
+</html>

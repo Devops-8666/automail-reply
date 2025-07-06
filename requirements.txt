@@ -1,0 +1,6 @@
+Flask
+pika
+pymongo
+dnspython
+requests
+
