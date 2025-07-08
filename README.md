@@ -1,2 +1,2 @@
 # automail-reply
-automail-reply
+automail-bugfix-reply
