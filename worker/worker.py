@@ -12,7 +12,9 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from app.database import update_reply_only
 
 # MongoDB setup
-client = MongoClient("mongodb://mongodb:27017/")  # Use service name from docker-compose
+#client = MongoClient("mongodb://mongodb:27017/")  # Use service name from docker-compose
+MONGO_URI = os.environ.get("MONGO_URI")
+client = MongoClient(MONGO_URI)
 db = client["automail"]
 emails_col = db["emails"]
 
