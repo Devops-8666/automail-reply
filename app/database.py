@@ -4,8 +4,8 @@ import os
 
 ##client = MongoClient("mongodb://mongodb:27017/")
 #MONGO_URI = os.getenv("MONGO_URI", "mongodb://mongodb:27017/")
-MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://vinaysolutions1512:jabJ1wW8FBCtsfy9@automailreply.h746grp.mongodb.net/automail?retryWrites=true&w=majority&tls=true")
-client = MongoClient(MONGO_URI)
+MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://vinaysolutions1512:jabJ1wW8FBCtsfy9@automailreply.h746grp.mongodb.net/automail?retryWrites=true&w=majority")
+client = MongoClient(MONGO_URI,tls=True)
 db = client["automail"]
 emails_col = db["emails"]
 

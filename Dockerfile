@@ -4,13 +4,11 @@ FROM python:3.10-slim
 
 WORKDIR /app
 RUN apt-get update && apt-get install -y \
+    build-essential \
+    libssl-dev \
     ca-certificates \
     curl \
-    gnupg \
-    openssl \
     && rm -rf /var/lib/apt/lists/*
-
-RUN update-ca-certificates
 
 COPY requirements.txt .
 

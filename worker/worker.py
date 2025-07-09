@@ -13,8 +13,11 @@ from app.database import update_reply_only
 
 # MongoDB setup
 #client = MongoClient("mongodb://mongodb:27017/")  # Use service name from docker-compose
-MONGO_URI = os.environ.get("MONGO_URI")
-client = MongoClient(MONGO_URI)
+MONGO_URI = os.getenv(
+    "MONGO_URI",
+    "mongodb+srv://vinaysolutions1512:jabJ1wW8FBCtsfy9@automailreply.h746grp.mongodb.net/automail?retryWrites=true&w=majority"
+)
+client = MongoClient(MONGO_URI, tls=True)
 db = client["automail"]
 emails_col = db["emails"]
 
