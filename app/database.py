@@ -1,7 +1,10 @@
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+import os
 
-client = MongoClient("mongodb://mongodb:27017/")
+##client = MongoClient("mongodb://mongodb:27017/")
+MONGO_URI = os.getenv("MONGO_URI", "mongodb://mongodb:27017/")
+client = MongoClient(MONGO_URI)
 db = client["automail"]
 emails_col = db["emails"]
 
