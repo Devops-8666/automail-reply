@@ -1,6 +1,5 @@
 Flask
 pika
-pymongo
 dnspython
 requests
 pymongo>=4.3.3

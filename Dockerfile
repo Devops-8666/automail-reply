@@ -3,13 +3,20 @@
 FROM python:3.10-slim
 
 WORKDIR /app
-RUN apt-get update && apt-get install -y libssl-dev ca-certificates
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    curl \
+    gnupg \
+    openssl \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY . .
+RUN update-ca-certificates
+
+COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-EXPOSE 5000
+COPY . .
 
 CMD ["python3", "run.py"]
 
