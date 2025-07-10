@@ -21,7 +21,8 @@ app.secret_key = os.urandom(24)
 # 🐇 Send to RabbitMQ
 def send_to_queue(email_id, reply_text):
     try:
-        connection = pika.BlockingConnection(pika.ConnectionParameters("rabbitmq"))
+        rabbit_host = os.getenv("RABBITMQ_HOST", "localhost")  # fallback for dev
+        connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbit_host))
         channel = connection.channel()
         channel.queue_declare(queue="reply_queue")
         message = json.dumps({"id": str(email_id), "text": reply_text})
