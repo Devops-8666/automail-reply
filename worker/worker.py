@@ -22,19 +22,26 @@ db = client["automail"]
 emails_col = db["emails"]
 
 # Wait and connect to RabbitMQ safely
-def wait_for_rabbitmq(host="rabbitmq", port=5672, retries=10):
+def wait_for_rabbitmq(url=None, retries=10):
     for attempt in range(1, retries + 1):
         try:
-            connection = pika.BlockingConnection(pika.ConnectionParameters(host=host, port=port))
+            if url:
+                params = pika.URLParameters(url)
+                connection = pika.BlockingConnection(params)
+            else:
+                connection = pika.BlockingConnection(pika.ConnectionParameters(host="rabbitmq", port=5672))
             print("✅ Connected to RabbitMQ.")
             return connection
         except Exception as e:
-            print(f"⏳ Waiting for RabbitMQ... attempt {attempt}/{retries}")
+            print(f"⏳ Waiting for RabbitMQ... attempt {attempt}/{retries} — {e}")
             time.sleep(3)
     raise Exception("❌ Could not connect to RabbitMQ after retries.")
 
+
 def main():
-    connection = wait_for_rabbitmq()
+    rabbitmq_url = os.getenv("CLOUD_AMQP_URL")  # Add this to your Render env vars
+    print("[DEBUG] CLOUD_AMQP_URL =", rabbitmq_url)  # 🔍 Print for debugging
+    connection = wait_for_rabbitmq(url=rabbitmq_url)
     channel = connection.channel()
     channel.queue_declare(queue="reply_queue")
 
