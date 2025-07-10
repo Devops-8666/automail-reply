@@ -25,6 +25,9 @@ def send_to_queue(email_id, reply_text):
         #connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbit_host))
         CLOUD_AMQP_URL = os.getenv("CLOUD_AMQP_URL")
         
+        if not CLOUD_AMQP_URL:  
+            raise ValueError("CLOUD_AMQP_URL not set in environment")
+
         params = pika.URLParameters(CLOUD_AMQP_URL)
         connection = pika.BlockingConnection(params)
         
