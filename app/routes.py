@@ -21,8 +21,13 @@ app.secret_key = os.urandom(24)
 # 🐇 Send to RabbitMQ
 def send_to_queue(email_id, reply_text):
     try:
-        rabbit_host = os.getenv("RABBITMQ_HOST", "localhost")  # fallback for dev
-        connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbit_host))
+        #rabbit_host = os.getenv("RABBITMQ_HOST", "localhost")  # fallback for dev
+        #connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbit_host))
+        CLOUD_AMQP_URL = os.getenv("CLOUD_AMQP_URL")
+        
+        params = pika.URLParameters(CLOUD_AMQP_URL)
+        connection = pika.BlockingConnection(params)
+        
         channel = connection.channel()
         channel.queue_declare(queue="reply_queue")
         message = json.dumps({"id": str(email_id), "text": reply_text})
