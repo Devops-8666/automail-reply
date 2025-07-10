@@ -1,9 +1,11 @@
 import requests
 import traceback
+import os
 
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
+API_KEY = os.environ.get("OPENROUTER_API_KEY")  # load from env variable
 HEADERS = {
-    "Authorization": "Bearer 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",  # Replace with your OpenRouter API key
+    "Authorization": f"Bearer {API_KEY}",
     "Content-Type": "application/json"
 }
 
