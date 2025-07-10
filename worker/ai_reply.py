@@ -1,4 +1,5 @@
 import requests
+import traceback
 
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
 HEADERS = {
@@ -16,6 +17,7 @@ def generate_reply(text):
     }
 
     try:
+        print("[🧠] Sending request to OpenRouter with prompt:", text)
         response = requests.post(API_URL, headers=HEADERS, json=payload, timeout=20)
         response.raise_for_status()
         result = response.json()
@@ -26,5 +28,6 @@ def generate_reply(text):
         return result["choices"][0]["message"]["content"].strip()
     except Exception as e:
         print("AI error:", e)
-        return "Thank you for your email. I will get back to you shortly."
+        traceback.print_exc()
+        return "⚠️ AI is unavailable. Please try again later."
 
