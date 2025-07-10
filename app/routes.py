@@ -24,6 +24,7 @@ def send_to_queue(email_id, reply_text):
         #rabbit_host = os.getenv("RABBITMQ_HOST", "localhost")  # fallback for dev
         #connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbit_host))
         CLOUD_AMQP_URL = os.getenv("CLOUD_AMQP_URL")
+        print(f"[DEBUG] CLOUD_AMQP_URL = {CLOUD_AMQP_URL}")
         
         if not CLOUD_AMQP_URL:  
             raise ValueError("CLOUD_AMQP_URL not set in environment")
