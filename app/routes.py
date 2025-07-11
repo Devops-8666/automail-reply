@@ -15,6 +15,9 @@ from bson.objectid import ObjectId
 import os
 import smtplib
 from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email import encoders
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -168,19 +171,54 @@ def compose_email():
 
 @app.route('/send_composed_email', methods=['POST'])
 def send_composed_email():
+    from_email = session.get('email')
+    app_password = session.get('password')
     to_email = request.form.get('to_email')
     subject = request.form.get('subject')
-    content = request.form.get('email_content')
+    body = request.form.get('email_content')
+    files = request.files.getlist('attachments')  # 🔁 multiple files
 
-    send_email_with_bcc(
-        user_email=session.get('email'),
-        app_password=session.get('password'),
-        to_address=to_email,
-        subject=subject,
-        body=content
-    )
-    flash("✉️ Email sent — a copy has been BCC’d to your inbox for record.")
-    return redirect("/inbox")
+    msg = MIMEMultipart()
+    msg['From'] = from_email
+    msg['To'] = to_email
+    msg['Subject'] = subject
+    msg['Bcc'] = from_email  # ✅ self-copy
+
+    msg.attach(MIMEText(body, 'plain'))
+
+    # Limit: 5MB per file
+    max_file_size = 5 * 1024 * 1024  # 5MB
+
+    for file in files:
+        if file and file.filename:
+            file.seek(0, os.SEEK_END)
+            size = file.tell()
+            file.seek(0)
+
+            if size > max_file_size:
+                flash(f"⚠️ File '{file.filename}' exceeds 5MB and was skipped.")
+                continue
+
+            part = MIMEBase("application", "octet-stream")
+            part.set_payload(file.read())
+            encoders.encode_base64(part)
+            part.add_header(
+                "Content-Disposition",
+                f"attachment; filename=\"{file.filename}\""
+            )
+            msg.attach(part)
+
+    try:
+        smtp = smtplib.SMTP("smtp.gmail.com", 587)
+        smtp.starttls()
+        smtp.login(from_email, app_password)
+        smtp.sendmail(from_email, [to_email, from_email], msg.as_string())
+        smtp.quit()
+        flash("✅ Email sent with attachments (if any). A copy has been BCC’d to your inbox.")
+    except Exception as e:
+        flash(f"❌ Failed to send email: {str(e)}")
+
+    return redirect(url_for('inbox'))
 
 
 # ⏭ Skip
