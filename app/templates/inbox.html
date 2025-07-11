@@ -15,6 +15,7 @@
     </div>
   </div>
 
+  {% block content %}
   <p>
     📬 <strong>Total:</strong> {{ total }} |
     📭 <strong>Unread:</strong> {{ unread }} |
@@ -65,6 +66,7 @@
   {% else %}
     <div class="alert alert-info mt-4">No emails to display.</div>
   {% endif %}
+  {% endblock %}
 
 </body>
 </html>

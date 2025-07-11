@@ -1,27 +1,39 @@
-{% extends "inbox.html" %}
-{% block content %}
-<h2>📝 Compose Email with AI</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Compose with AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container py-4">
 
-<form method="POST" action="/compose">
-  <label for="prompt">What do you want to say?</label><br>
-  <textarea name="prompt" rows="3" placeholder="e.g. Resignation email, project update..." required></textarea><br>
-  <button type="submit">Generate Email</button>
-</form>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>📝 Compose Email with AI</h2>
+    <a href="/inbox" class="btn btn-outline-primary">📥 Back to Inbox</a>
+  </div>
 
-{% if ai_email %}
-  <hr>
-  <form method="POST" action="/send_composed_email">
-    <label>To:</label><br>
-    <input type="email" name="to_email" required><br>
-
-    <label>Subject:</label><br>
-    <input type="text" name="subject" required><br>
-
-    <label>Email Body:</label><br>
-    <textarea name="email_content" rows="10">{{ ai_email }}</textarea><br>
-
-    <button type="submit">Send Email</button>
+  <form method="POST" action="/compose">
+    <label for="prompt">What do you want to say?</label><br>
+    <textarea name="prompt" rows="3" class="form-control" placeholder="e.g. Resignation email, project update..." required></textarea><br>
+    <button type="submit" class="btn btn-primary">Generate Email</button>
   </form>
-{% endif %}
-{% endblock %}
+
+  {% if ai_email %}
+    <hr>
+    <form method="POST" action="/send_composed_email">
+      <label>To:</label><br>
+      <input type="email" name="to_email" class="form-control" required><br>
+
+      <label>Subject:</label><br>
+      <input type="text" name="subject" class="form-control" required><br>
+
+      <label>Email Body:</label><br>
+      <textarea name="email_content" rows="10" class="form-control">{{ ai_email }}</textarea><br>
+
+      <button type="submit" class="btn btn-success">Send Email</button>
+    </form>
+  {% endif %}
+
+</body>
+</html>
 
