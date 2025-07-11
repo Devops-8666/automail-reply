@@ -59,6 +59,23 @@ def send_email_reply(user_email, app_password, to_address, subject, body):
         print(f"[📤] Sent reply to {to_address}")
     except Exception as e:
         print(f"[✗] Failed to send email: {e}")
+#Send reply email via SMTP,used for /compose only (✅ has BCC)
+def send_email_with_bcc(user_email, app_password, to_address, subject, body):
+    msg = MIMEText(body)
+    msg["From"] = user_email
+    msg["To"] = to_address
+    msg["Subject"] = subject
+    msg["Bcc"] = user_email  # ✅ Only here
+
+    try:
+        smtp_server = smtplib.SMTP("smtp.gmail.com", 587)
+        smtp_server.starttls()
+        smtp_server.login(user_email, app_password)
+        smtp_server.send_message(msg)
+        smtp_server.quit()
+        print(f"[📤] Sent composed email to {to_address} (BCC to self)")
+    except Exception as e:
+        print(f"[✗] Failed to send email: {e}")
 
 
 # 🔐 Login route
@@ -155,14 +172,14 @@ def send_composed_email():
     subject = request.form.get('subject')
     content = request.form.get('email_content')
 
-    send_email_reply(
+    send_email_with_bcc(
         user_email=session.get('email'),
         app_password=session.get('password'),
         to_address=to_email,
         subject=subject,
         body=content
     )
-
+    flash("✉️ Email sent — a copy has been BCC’d to your inbox for record.")
     return redirect("/inbox")
 
 
