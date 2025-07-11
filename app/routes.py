@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session,url_for,flash
 from app.email_client import fetch_emails
 from worker.ai_reply import generate_email_from_prompt
 from app.database import (
