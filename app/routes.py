@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, session
 from app.email_client import fetch_emails
+from worker.ai_reply import generate_email_from_prompt
 from app.database import (
     save_emails,
     get_emails,
@@ -139,6 +140,25 @@ def edit(id):
 
     return render_template("edit.html", email=email)
 
+@app.route('/compose', methods=['GET', 'POST'])
+def compose_email():
+    ai_email = None
+    if request.method == 'POST':
+        prompt = request.form.get('prompt')
+        if prompt:
+            ai_email = generate_email_from_prompt(prompt)
+    return render_template('compose.html', ai_email=ai_email)
+
+@app.route('/send_composed_email', methods=['POST'])
+def send_composed_email():
+    from app.email_client import send_email  # adjust if path is different
+    from_email = session.get('email') or 'you@example.com'
+    to_email = request.form.get('to_email')
+    subject = request.form.get('subject')
+    content = request.form.get('email_content')
+
+    send_email(from_email, to_email, subject, content)
+    return redirect(url_for('inbox'))
 
 # ⏭ Skip
 @app.route("/skip/<id>")

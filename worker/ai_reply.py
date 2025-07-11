@@ -32,4 +32,27 @@ def generate_reply(text):
         print("AI error:", e)
         traceback.print_exc()
         return "⚠️ AI is unavailable. Please try again later."
+def generate_email_from_prompt(prompt):
+    payload = {
+        "model": "mistralai/mistral-7b-instruct:free",
+        "messages": [
+            {"role": "system", "content": "Write a professional, polite email based on the user's intent."},
+            {"role": "user", "content": prompt}
+        ]
+    }
+
+    try:
+        print("[✍️] Generating composed email from prompt:", prompt)
+        response = requests.post(API_URL, headers=HEADERS, json=payload, timeout=20)
+        response.raise_for_status()
+        result = response.json()
+
+        # 🔁 Debug AI response
+        print("[🔁 Compose AI Response]:", result)
+
+        return result["choices"][0]["message"]["content"].strip()
+    except Exception as e:
+        print("Compose AI error:", e)
+        traceback.print_exc()
+        return "⚠️ Could not generate email. Please try again later."
 

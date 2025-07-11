@@ -1,0 +1,27 @@
+{% extends "inbox.html" %}
+{% block content %}
+<h2>📝 Compose Email with AI</h2>
+
+<form method="POST" action="/compose">
+  <label for="prompt">What do you want to say?</label><br>
+  <textarea name="prompt" rows="3" placeholder="e.g. Resignation email, project update..." required></textarea><br>
+  <button type="submit">Generate Email</button>
+</form>
+
+{% if ai_email %}
+  <hr>
+  <form method="POST" action="/send_composed_email">
+    <label>To:</label><br>
+    <input type="email" name="to_email" required><br>
+
+    <label>Subject:</label><br>
+    <input type="text" name="subject" required><br>
+
+    <label>Email Body:</label><br>
+    <textarea name="email_content" rows="10">{{ ai_email }}</textarea><br>
+
+    <button type="submit">Send Email</button>
+  </form>
+{% endif %}
+{% endblock %}
+
