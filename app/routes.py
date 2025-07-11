@@ -151,14 +151,20 @@ def compose_email():
 
 @app.route('/send_composed_email', methods=['POST'])
 def send_composed_email():
-    from app.email_client import send_email  # adjust if path is different
-    from_email = session.get('email') or 'you@example.com'
     to_email = request.form.get('to_email')
     subject = request.form.get('subject')
     content = request.form.get('email_content')
 
-    send_email(from_email, to_email, subject, content)
-    return redirect(url_for('inbox'))
+    send_email_reply(
+        user_email=session.get('email'),
+        app_password=session.get('password'),
+        to_address=to_email,
+        subject=subject,
+        body=content
+    )
+
+    return redirect("/inbox")
+
 
 # ⏭ Skip
 @app.route("/skip/<id>")
